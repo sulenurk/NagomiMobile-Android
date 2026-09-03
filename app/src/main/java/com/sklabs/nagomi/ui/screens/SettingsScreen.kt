@@ -331,13 +331,13 @@ private const val DEFAULT_PRIVACY_POLICY = """Effective date: September 3, 2026
 
 Nagomi Mobile stores your timer settings, subjects, tasks, study plans and session statistics locally on your device.
 
-SKLabs does not collect, transmit, sell or share your personal data. The app does not require an internet connection and does not include advertising, analytics or tracking services.
+SKLabs™ does not collect, transmit, sell or share your personal data. The app does not require an internet connection and does not include advertising, analytics or tracking services.
 
 Notification and exact-alarm permissions are used only to display timer countdowns and play alarms at the requested time.
 
 Your data remains on your device until you remove it from the app or uninstall the app. Uninstalling the app may permanently delete locally stored data.
 
-For privacy questions, contact SKLabs through the support address shown on the application's distribution page."""
+For privacy questions, contact SKLabs™ through the support address shown on the application's distribution page."""
 
 @Composable
 private fun SettingsCard(title: String, content: @Composable () -> Unit) {

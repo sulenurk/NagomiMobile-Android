@@ -91,7 +91,7 @@ or internet connection, and is designed for both phones and tablets.
 - Height-aware timer sizing designed to avoid scrolling on timer screens
 - Theme-consistent full-screen backgrounds in dark and light mode
 - Current page and queue state preserved during screen rotation
-- Responsive splash artwork on `#1E163D` with the `SKLabs®` signature
+- Responsive splash artwork on `#1E163D` with the `SKLabs™` signature
 - Timer settings actions positioned in the shared page header
 
 ## Privacy
@@ -168,4 +168,4 @@ different package ID.
 
 `v0.8.1`
 
-Developed by **SKLabs®**.
+Developed by **SKLabs™**.
