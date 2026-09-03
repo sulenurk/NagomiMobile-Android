@@ -1,83 +1,191 @@
-# Nagomi Native — Kotlin migration
+# Nagomi Mobile
 
-This project is the native Android/Jetpack Compose migration of the existing
-KivyMD NagomiMobile application.
+**Plan. Focus. Progress.**
 
-## Included through Phase 8
+Nagomi Mobile is a native Android productivity app that combines Pomodoro timing, study planning, task-based focus sessions, and progress statistics in one calm, customizable workspace.
 
-- Native Nagomi splash screen using the supplied artwork on `#1E163D`.
-- `SKLabs®` brand signature on the splash screen, keeping application pages uncluttered.
-- Pomodoro and Focus settings actions in the page header: beside the navigation control on phones and at the page-header right edge on tablets.
+The app is built with Kotlin and Jetpack Compose as the native successor to the original KivyMD NagomiMobile application. It works locally, requires no account or internet connection, and is designed for both phones and tablets.
 
-- Existing package identity: `com.sklabs.nagomi`
-- Phone portrait lock and tablet rotation support
-- Adaptive phone drawer / tablet navigation rail
-- Six application destinations
-- Working timestamp-based Pomodoro engine
-- Focus, short-break, long-break, skip, pause and reset behavior
-- Eight Nagomi color palettes
-- Kotlin models matching the existing JSON subject/task/session/settings data
-- Existing icons, alarm sounds and five locale JSON files retained as migration assets
-- Unit tests for countdown, long-break selection and cycle completion
-- Room 2.8 database for subjects, study tasks and focus sessions
-- Subjects: add, duplicate-name validation, color selection/cycling and delete
-- Subject deletion safely reassigns related tasks and sessions to Other
-- Study Plan: add, edit, complete, reopen, duplicate, delete and reorder tasks
-- Study Plan filters: All, Pending, Active and Completed
-- Start Task and Start Plan persist active/queue state before opening Focus Timer
-- Focus Timer executes a single task or the full Study Plan queue
-- Focus sessions and completed tasks are written to Room automatically
-- Per-task breaks transition into the next queued focus session
-- Focus countdown, phase, pause state and active task survive app recreation
-- Timestamp-based background countdown and away-time tracking
-- Focus controls: start/pause, reset phase, complete task, skip break and stop plan
-- Native AlarmManager scheduling for Pomodoro and Focus Timer
-- Exact-alarm access request on Android 12+ with a safe inexact fallback
-- Android 13+ notification permission flow when a timer is first started
-- Public lock-screen countdown notifications using Android's countdown chronometer
-- Looping alarm audio and vibration from a media-playback foreground service
-- Stop Alarm action directly in the alarm notification
-- Reset, pause, skip and Stop Plan also silence active alarm playback
-- Complete Settings screen with persistent timer, alarm, appearance and statistics preferences
-- Six selectable alarm tones with immediate preview
-- Dark/light appearance and eight live color palettes
-- Configurable Pomodoro durations, cycle behavior and auto-start controls
-- Configurable daily focus goal, first day of week, queue visibility and away-time visibility
-- System access status and shortcuts for notifications and exact alarms
-- Complete Statistics screen backed by Room focus-session history
-- Today metrics, Study Plan/Pomodoro breakdown and daily-goal progress
-- Subject-filtered seven-day bar chart and weekly subject distribution
-- Five most recent daily sessions and confirmed statistics clearing
-- Completed regular Pomodoro focus sessions are now recorded in Room
-- In-page bottom-sheet settings for Pomodoro and Focus Timer
-- Pomodoro focus, short-break, long-break and cycle editing from the timer page
-- Shared Auto-start Break and Auto-start Focus switches on both timer pages
-- Phone drawer and tablet rail shortcuts for alarm sound, dark mode and language
-- Height-aware Pomodoro sizing that fits tablet portrait and landscape without scrolling
-- Theme-consistent full-screen backgrounds and content colors on both phone and tablet layouts
-- Persistent English, Turkish, German, French and Spanish language selection
-- Localized navigation titles and timer settings panels backed by the retained locale files
-- Contextual Stop Alarm buttons on Pomodoro and Focus Timer while alarm playback is active
-- Persistent Pomodoro countdown state across app recreation and process restarts
-- Background completion and auto-start chaining for Pomodoro and Study Plan timers
-- Mutual exclusion between Pomodoro and Focus Timer starts
-- App-wide active alarm card with Stop Alarm and direct timer navigation
-- Study Plan bulk actions for clearing completed tasks or the whole plan
-- Full screen-content localization in English, Turkish, German, French and Spanish
-- Localized weekday labels and timer/alarm notifications
-- One-time import of compatible legacy `app_data.json` data on same-package upgrades
+## Features
 
-Nagomi continues to use the six bundled local alarm sounds.
+### Pomodoro Timer
+
+* Timestamp-based focus, short-break, and long-break countdowns
+* Start, pause, reset, and skip controls
+* Configurable focus and break durations
+* Configurable long-break interval and number of focus sessions per cycle
+* Optional automatic transition from focus to break and from break to focus
+* Persistent timer state across screen rotation, app recreation, and process restarts
+* Completed Pomodoro focus sessions recorded in local statistics
+
+### Focus Timer
+
+* Runs an individual task or an entire Study Plan queue
+* Shows the active task, planned focus duration, and current phase
+* Start/pause, reset, complete task, skip break, and Stop Plan controls
+* Per-task break durations and automatic progression to the next queued task
+* Collapsible **Up next** task queue
+* Optional cumulative away-time tracking while the app is in the background
+* Persistent active task, phase, countdown, and pause state
+* Pomodoro and Focus Timer cannot run simultaneously
+
+### Study Plan
+
+* Add, edit, duplicate, reorder, and delete tasks
+* Set a subject, focus duration, break duration, and priority for each task
+* Mark tasks as complete or reopen them
+* Filter tasks by All, Pending, Active, and Completed
+* Start one task directly or run the full plan as a queue
+* Clear completed tasks or the entire plan with confirmation
+
+### Subjects
+
+* Create and delete custom subjects
+* Duplicate-name validation
+* Custom subject colors
+* Safe reassignment of related tasks and sessions to **Other** when a subject is deleted
+
+### Statistics
+
+* Today’s focused time, completed sessions, and away time
+* Study Plan and Pomodoro focus breakdown
+* Daily focus-goal progress
+* Subject-filtered seven-day overview
+* Weekly subject distribution
+* Five most recent sessions for the current day
+* Local history clearing with confirmation
+
+### Settings and Personalization
+
+* Dark and light appearance modes
+* Eight Nagomi color palettes
+* Six bundled alarm tones: Analog, Beep, Birdy, Buzz, Dance, and Galaxy
+* Alarm sound preview and vibration controls
+* Configurable daily focus goal and first day of the week
+* Queue and away-time visibility controls
+* In-page settings panels for both timers
+* System-access status and shortcuts for notification and exact-alarm permissions
+* In-app Privacy Policy
+* Persistent language selection
+
+## Native Android Integration
+
+* `AlarmManager` scheduling for Pomodoro and Focus Timer
+* Exact-alarm access request on Android 12 and later, with a safe inexact fallback
+* Notification permission flow on Android 13 and later
+* Public lock-screen countdown notifications using Android’s countdown chronometer
+* Looping alarm audio and vibration through a foreground media-playback service
+* **Stop Alarm** action in notifications, timer screens, and the app-wide alarm card
+* Direct navigation from an active alarm to the relevant timer
+* Background timer completion and optional automatic focus/break chaining
+* Immersive layout with transient system navigation controls
+
+## Phone and Tablet Support
+
+* Phone portrait layout with a navigation drawer
+* Tablet portrait and landscape layouts with an adaptive navigation rail
+* Height-aware timer sizing designed to avoid scrolling on timer screens
+* Theme-consistent full-screen backgrounds in dark and light mode
+* Current page and queue state preserved during screen rotation
+* Responsive splash artwork on `#1E163D`
+* `SKLabs™` brand signature on the splash screen
+* Timer settings actions positioned in the shared page header
+
+## Privacy
+
+Nagomi Mobile stores subjects, tasks, timer settings, and focus-session history locally on the device.
+
+The app:
+
+* Does not require an account
+* Does not request internet access
+* Does not collect or transmit personal information
+* Does not include advertising
+* Does not include analytics or tracking services
+* Does not sell or share user data
+
+Notification, exact-alarm, vibration, wake-lock, and foreground-service permissions are used only to keep timers reliable and deliver their alarms.
+
+The complete Privacy Policy is available from the application’s Settings page.
+
+## Languages
+
+Nagomi Mobile is available in:
+
+* English
+* Turkish
+* German
+* French
+* Spanish
+
+Navigation, screens, settings, status messages, weekday labels, and timer/alarm notifications follow the selected language.
+
+## Technology
+
+* Kotlin
+* Jetpack Compose
+* Material 3
+* Room 2.8
+* Kotlin Coroutines and Flow
+* Android `AlarmManager`
+* Android notifications and foreground services
+* JUnit timer-engine tests
+
+## Requirements
+
+* Android 6.0 or later (`minSdk = 23`)
+* Target SDK 35
+* JDK 17 for development
+* Android Studio with Gradle support
 
 ## Open in Android Studio
 
-Open the `NagomiNative` folder as a project, wait for Gradle Sync, and run the
-`app` configuration on a phone or tablet.
+1. Download or clone the repository.
+2. Open the `NagomiNative` folder as an Android Studio project.
+3. Wait for Gradle Sync to finish.
+4. Select the `app` run configuration.
+5. Run the app on an Android phone, tablet, or emulator.
 
-Debug builds use `com.sklabs.nagomi.native`, so they can be installed beside the
-current Kivy app without replacing it. Release builds keep `com.sklabs.nagomi`.
-Do not uninstall the current Nagomi APK if its local data must be migrated. A
-same-package release update also requires signing with the same key.
+Debug builds use the following package ID:
 
-Room 2.8 requires Android API 23 or newer, so the native project now uses
-`minSdk = 23`.
+`com.sklabs.nagomi.native`
+
+This allows the debug build to be installed beside an existing release build.
+
+Release builds use:
+
+`com.sklabs.nagomi`
+
+## Install the APK
+
+1. Open the repository’s **Releases** section.
+2. Download the latest Nagomi Mobile APK.
+3. Open the downloaded APK on your Android device.
+4. If requested, allow installation from the application used to download the APK.
+5. Complete the installation.
+
+## Updating From the Legacy KivyMD App
+
+The native app can perform a one-time import of compatible legacy `app_data.json` content, including:
+
+* Subjects
+* Study tasks
+* Focus-session history
+* Application settings
+* Active task queue
+* Saved timer state
+
+Migration requires all of the following:
+
+* The native release must use the same package ID: `com.sklabs.nagomi`.
+* It must be installed as an update over the existing application.
+* It must be signed with the same signing key.
+* The existing application must not be uninstalled before the update.
+
+Debug builds cannot access the release application’s private data because they use a different package ID.
+
+## Current Version
+
+`v0.8.1`
+
+Developed by **SKLabs®**.
