@@ -188,4 +188,4 @@ Debug builds cannot access the release application’s private data because they
 
 `v0.8.1`
 
-Developed by **SKLabs®**.
+Developed by **SKLabs™**.
