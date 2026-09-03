@@ -6,7 +6,7 @@ KivyMD NagomiMobile application.
 ## Included through Phase 8
 
 - Native Nagomi splash screen using the supplied artwork on `#1E163D`.
-- `SKLabs™` brand signature on the splash screen, keeping application pages uncluttered.
+- `SKLabs®` brand signature on the splash screen, keeping application pages uncluttered.
 - Pomodoro and Focus settings actions in the page header: beside the navigation control on phones and at the page-header right edge on tablets.
 
 - Existing package identity: `com.sklabs.nagomi`

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -21,6 +22,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
@@ -51,6 +54,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -83,6 +88,7 @@ fun FocusScreen(
     val timerSize = if (isTablet) 360.dp else 250.dp
     val timerFont = if (isTablet) 68.sp else 46.sp
     var showSettings by rememberSaveable { mutableStateOf(false) }
+    var queueExpanded by rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(settingsRequestKey) {
         if (settingsRequestKey > 0) {
@@ -117,6 +123,8 @@ fun FocusScreen(
                 onCompleteOrSkip = viewModel::completeOrSkipPhase,
                 onStopPlan = viewModel::stopPlan,
                 availableHeight = maxHeight,
+                queueExpanded = queueExpanded,
+                onToggleQueue = { queueExpanded = !queueExpanded },
             )
         } else LazyColumn(
         modifier = Modifier.fillMaxSize().padding(horizontal = 18.dp),
@@ -243,14 +251,15 @@ fun FocusScreen(
         val nextTasks = state.queue.filter { it.task.id != state.currentTask?.task?.id }
         if (settings.showQueueProgress && nextTasks.isNotEmpty()) {
             item {
-                Text(
-                    strings.text("up_next", "Up next"),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth(),
+                UpNextHeader(
+                    expanded = queueExpanded,
+                    strings = strings,
+                    onToggle = { queueExpanded = !queueExpanded },
                 )
             }
-            items(nextTasks, key = { it.task.id }) { task -> QueueTaskCard(task) }
+            if (queueExpanded) {
+                items(nextTasks, key = { it.task.id }) { task -> QueueTaskCard(task) }
+            }
         }
 
         item { Spacer(Modifier.height(24.dp)) }
@@ -278,12 +287,20 @@ private fun TabletLandscapeFocusContent(
     onCompleteOrSkip: () -> Unit,
     onStopPlan: () -> Unit,
     availableHeight: androidx.compose.ui.unit.Dp,
+    queueExpanded: Boolean,
+    onToggleQueue: () -> Unit,
 ) {
-    val timerSize = (availableHeight - 116.dp).coerceIn(190.dp, 320.dp)
+    val pageEdgeGap = 12.dp
+    val taskToStopPlanGap = 8.dp
+    val circleContentGap = 12.dp
+    val statusToControlsGap = 6.dp
+    val contentVerticalLift = 4.dp
+    val timerReservedSpace = 242.dp
+    val timerSize = (availableHeight - timerReservedSpace).coerceIn(160.dp, 340.dp)
     val timerFont = when {
-        timerSize < 235.dp -> 42.sp
+        timerSize < 225.dp -> 40.sp
         timerSize < 285.dp -> 52.sp
-        else -> 62.sp
+        else -> 64.sp
     }
     val nextTasks = state.queue.filter { it.task.id != state.currentTask?.task?.id }
 
@@ -293,88 +310,123 @@ private fun TabletLandscapeFocusContent(
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         item {
-            Row(
-                modifier = Modifier.fillMaxWidth().height(availableHeight),
-                horizontalArrangement = Arrangement.spacedBy(24.dp),
-                verticalAlignment = Alignment.CenterVertically,
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(availableHeight)
+                    .padding(horizontal = 20.dp, vertical = pageEdgeGap)
+                    .offset(y = -contentVerticalLift),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
             ) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                ) {
+                state.currentTask?.let { task ->
                     Text(
-                        if (state.phase == FocusPhase.FOCUS) {
-                            strings.text("focus_session", "Focus Session")
-                        } else {
-                            strings.text("break_mode", "Break Time")
-                        },
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
+                        text = task.task.title,
+                        modifier = Modifier.fillMaxWidth(0.82f),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
-                    state.currentTask?.let { CurrentTaskCard(it, state.phase) }
-                    if (state.status.isNotBlank()) {
-                        Text(
-                            strings.status(state.status),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    }
+                    Text(
+                        text = strings.format(
+                            "focus_minutes_detail",
+                            "{minutes} min focus",
+                            "minutes" to task.task.focusDurationMinutes,
+                        ),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Spacer(Modifier.height(taskToStopPlanGap))
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         if (alarmActive) {
                             StopAlarmButton(
                                 label = strings.text("stop_alarm", "Stop alarm"),
                                 onClick = onStopAlarm,
-                                modifier = Modifier.weight(1f),
                             )
                         }
-                        OutlinedButton(onClick = onStopPlan, modifier = Modifier.weight(1f)) {
+                        OutlinedButton(onClick = onStopPlan) {
                             Icon(Icons.Default.Close, contentDescription = null)
                             Text(" ${strings.text("stop_plan", "Stop Plan")}")
                         }
                     }
                 }
 
-                Column(
-                    modifier = Modifier.weight(1.15f),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    FocusTimerDial(
-                        state = state,
-                        settings = settings,
-                        strings = strings,
-                        timerSize = timerSize,
-                        timerFont = timerFont,
-                        strokeWidth = if (timerSize < 240.dp) 11.dp else 15.dp,
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    FocusTimerControls(
-                        state = state,
-                        strings = strings,
-                        onReset = onReset,
-                        onStartOrPause = onStartOrPause,
-                        onCompleteOrSkip = onCompleteOrSkip,
-                        mainButtonSize = if (timerSize < 235.dp) 54.dp else 60.dp,
-                    )
-                }
+                Spacer(Modifier.height(circleContentGap))
+                FocusTimerDial(
+                    state = state,
+                    settings = settings,
+                    strings = strings,
+                    timerSize = timerSize,
+                    timerFont = timerFont,
+                    strokeWidth = if (timerSize < 240.dp) 11.dp else 15.dp,
+                )
+                Spacer(Modifier.height(circleContentGap))
+                Text(
+                    text = strings.status(state.status).ifBlank {
+                        strings.text("focus_ready", "Ready to focus")
+                    },
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+                Spacer(Modifier.height(statusToControlsGap))
+                FocusTimerControls(
+                    state = state,
+                    strings = strings,
+                    onReset = onReset,
+                    onStartOrPause = onStartOrPause,
+                    onCompleteOrSkip = onCompleteOrSkip,
+                    mainButtonSize = if (timerSize < 225.dp) 52.dp else 58.dp,
+                )
             }
         }
 
         if (settings.showQueueProgress && nextTasks.isNotEmpty()) {
             item {
-                Text(
-                    strings.text("up_next", "Up next"),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth(),
+                UpNextHeader(
+                    expanded = queueExpanded,
+                    strings = strings,
+                    onToggle = onToggleQueue,
                 )
             }
-            items(nextTasks, key = { it.task.id }) { task -> QueueTaskCard(task) }
+            if (queueExpanded) {
+                items(nextTasks, key = { it.task.id }) { task -> QueueTaskCard(task) }
+            }
         }
         item { Spacer(Modifier.height(24.dp)) }
+    }
+}
+
+@Composable
+private fun UpNextHeader(
+    expanded: Boolean,
+    strings: NagomiStrings,
+    onToggle: () -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            strings.text("up_next", "Up next"),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+        )
+        IconButton(onClick = onToggle, modifier = Modifier.size(36.dp)) {
+            Icon(
+                imageVector = if (expanded) Icons.Default.KeyboardArrowUp
+                else Icons.Default.KeyboardArrowDown,
+                contentDescription = if (expanded) {
+                    strings.text("collapse_queue", "Collapse queue")
+                } else {
+                    strings.text("expand_queue", "Expand queue")
+                },
+            )
+        }
     }
 }
 
@@ -386,8 +438,9 @@ private fun FocusTimerDial(
     timerSize: androidx.compose.ui.unit.Dp,
     timerFont: androidx.compose.ui.unit.TextUnit,
     strokeWidth: androidx.compose.ui.unit.Dp,
+    modifier: Modifier = Modifier,
 ) {
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.size(timerSize)) {
+    Box(contentAlignment = Alignment.Center, modifier = modifier.size(timerSize)) {
         val trackColor = MaterialTheme.colorScheme.surfaceVariant
         val progressColor = if (state.phase == FocusPhase.FOCUS) {
             MaterialTheme.colorScheme.primary

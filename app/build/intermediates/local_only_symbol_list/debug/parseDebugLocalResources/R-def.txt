@@ -1,0 +1,14 @@
+R_DEF: Internal format may change without notice
+local
+drawable ic_timer_notification
+drawable nagomi_icon
+drawable nagomi_splash
+raw analog
+raw beep
+raw birdy
+raw buzz
+raw dans
+raw galaxy
+string app_name
+style Theme.Nagomi
+style Theme.Nagomi.Splash

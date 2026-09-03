@@ -17,18 +17,17 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
@@ -73,6 +72,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -85,6 +86,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -119,8 +123,10 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         AppRuntimeState.hasUiProcess = true
-        runBlocking(Dispatchers.IO) {
-            LegacyDataMigrator(applicationContext).migrateIfAvailable()
+        if (savedInstanceState == null) {
+            runBlocking(Dispatchers.IO) {
+                LegacyDataMigrator(applicationContext).migrateIfAvailable()
+            }
         }
         requestedTimer.value = intent.getStringExtra(com.sklabs.nagomi.notifications.NativeTimerScheduler.EXTRA_TIMER_KIND)
 
@@ -129,6 +135,7 @@ class MainActivity : ComponentActivity() {
         }
 
         enableEdgeToEdge()
+        hideSystemNavigationBar()
         setContent {
             NagomiRoot(requestedTimer) { requestedTimer.value = null }
         }
@@ -146,6 +153,20 @@ class MainActivity : ComponentActivity() {
         if (isFinishing) AppRuntimeState.hasUiProcess = false
         super.onDestroy()
     }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) hideSystemNavigationBar()
+    }
+
+    private fun hideSystemNavigationBar() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        WindowInsetsControllerCompat(window, window.decorView).apply {
+            hide(WindowInsetsCompat.Type.navigationBars())
+            systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+    }
 }
 
 private enum class Destination(val title: String, val icon: ImageVector) {
@@ -157,6 +178,13 @@ private enum class Destination(val title: String, val icon: ImageVector) {
     SETTINGS("Settings", Icons.Default.Settings),
 }
 
+private val DestinationSaver = Saver<Destination, String>(
+    save = { it.name },
+    restore = { savedName ->
+        Destination.entries.firstOrNull { it.name == savedName } ?: Destination.POMODORO
+    },
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NagomiRoot(
@@ -167,7 +195,7 @@ private fun NagomiRoot(
     val settings by settingsViewModel.settings.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val strings = remember(context, settings.language) { NagomiStrings.load(context, settings.language) }
-    var showBrandSplash by remember { mutableStateOf(true) }
+    var showBrandSplash by rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         delay(900)
@@ -196,18 +224,17 @@ private fun NagomiRoot(
 
 @Composable
 private fun NagomiBrandSplash() {
-    Box(
+    BoxWithConstraints(
         modifier = Modifier.fillMaxSize().background(Color(0xFF1E163D)),
         contentAlignment = Alignment.Center,
     ) {
+        val logoSize = minOf(maxWidth * 0.66f, maxHeight * 0.58f, 360.dp)
+
         Image(
             painter = painterResource(R.drawable.nagomi_splash),
             contentDescription = null,
             contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .fillMaxWidth(0.72f)
-                .sizeIn(maxWidth = 440.dp, maxHeight = 440.dp)
-                .aspectRatio(1f),
+            modifier = Modifier.size(logoSize),
         )
         Text(
             text = "SKLabs™",
@@ -229,7 +256,9 @@ private fun NagomiApp(
     requestedTimer: kotlinx.coroutines.flow.StateFlow<String?>,
     onTimerRequestConsumed: () -> Unit,
 ) {
-    var destination by remember { mutableStateOf(Destination.POMODORO) }
+    var destination by rememberSaveable(stateSaver = DestinationSaver) {
+        mutableStateOf(Destination.POMODORO)
+    }
     val focusViewModel: FocusViewModel = viewModel()
     val pomodoroViewModel: PomodoroViewModel = viewModel()
     val lifecycleOwner = LocalLifecycleOwner.current

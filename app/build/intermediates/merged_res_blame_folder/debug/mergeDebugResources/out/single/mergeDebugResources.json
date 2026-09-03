@@ -1,0 +1,38 @@
+[
+    {
+        "merged": "com.sklabs.nagomi.app-debug-51:/raw_galaxy.mp3.flat",
+        "source": "com.sklabs.nagomi.app-main-53:/raw/galaxy.mp3"
+    },
+    {
+        "merged": "com.sklabs.nagomi.app-debug-51:/raw_birdy.mp3.flat",
+        "source": "com.sklabs.nagomi.app-main-53:/raw/birdy.mp3"
+    },
+    {
+        "merged": "com.sklabs.nagomi.app-debug-51:/raw_beep.mp3.flat",
+        "source": "com.sklabs.nagomi.app-main-53:/raw/beep.mp3"
+    },
+    {
+        "merged": "com.sklabs.nagomi.app-debug-51:/raw_dans.mp3.flat",
+        "source": "com.sklabs.nagomi.app-main-53:/raw/dans.mp3"
+    },
+    {
+        "merged": "com.sklabs.nagomi.app-debug-51:/drawable_ic_timer_notification.xml.flat",
+        "source": "com.sklabs.nagomi.app-main-53:/drawable/ic_timer_notification.xml"
+    },
+    {
+        "merged": "com.sklabs.nagomi.app-debug-51:/raw_analog.mp3.flat",
+        "source": "com.sklabs.nagomi.app-main-53:/raw/analog.mp3"
+    },
+    {
+        "merged": "com.sklabs.nagomi.app-debug-51:/raw_buzz.mp3.flat",
+        "source": "com.sklabs.nagomi.app-main-53:/raw/buzz.mp3"
+    },
+    {
+        "merged": "com.sklabs.nagomi.app-debug-51:/drawable_nagomi_icon.png.flat",
+        "source": "com.sklabs.nagomi.app-main-53:/drawable/nagomi_icon.png"
+    },
+    {
+        "merged": "com.sklabs.nagomi.app-debug-51:/drawable_nagomi_splash.png.flat",
+        "source": "com.sklabs.nagomi.app-main-53:/drawable/nagomi_splash.png"
+    }
+]
