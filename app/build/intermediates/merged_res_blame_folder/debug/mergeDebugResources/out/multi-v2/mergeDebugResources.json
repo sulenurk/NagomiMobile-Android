@@ -577,25 +577,6 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\SLNR\\Downloads\\NagomiMobile-Kotlin\\NagomiNative - 18\\app\\src\\main\\res\\values\\themes.xml",
-                    "from": {
-                        "startLines": "2,9",
-                        "startColumns": "4,4",
-                        "startOffsets": "55,394",
-                        "endLines": "7,14",
-                        "endColumns": "12,12",
-                        "endOffsets": "388,761"
-                    },
-                    "to": {
-                        "startLines": "253,259",
-                        "startColumns": "4,4",
-                        "startOffsets": "16254,16592",
-                        "endLines": "258,264",
-                        "endColumns": "12,12",
-                        "endOffsets": "16587,16959"
-                    }
-                },
-                {
                     "source": "C:\\Users\\SLNR\\.gradle\\caches\\8.13\\transforms\\b6bb8ad09dde2ea6d6e7939d490450de\\transformed\\lifecycle-viewmodel-release\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2",
@@ -610,6 +591,23 @@
                         "startOffsets": "6896",
                         "endColumns": "49",
                         "endOffsets": "6941"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\SLNR\\Downloads\\NagomiMobile-Kotlin\\NagomiNative - 20\\app\\src\\main\\res\\values\\strings.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "43",
+                        "endOffsets": "94"
+                    },
+                    "to": {
+                        "startLines": "118",
+                        "startColumns": "4",
+                        "startOffsets": "7293",
+                        "endColumns": "43",
+                        "endOffsets": "7332"
                     }
                 },
                 {
@@ -757,6 +755,25 @@
                     }
                 },
                 {
+                    "source": "C:\\Users\\SLNR\\Downloads\\NagomiMobile-Kotlin\\NagomiNative - 20\\app\\src\\main\\res\\values\\themes.xml",
+                    "from": {
+                        "startLines": "2,9",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,394",
+                        "endLines": "7,14",
+                        "endColumns": "12,12",
+                        "endOffsets": "388,761"
+                    },
+                    "to": {
+                        "startLines": "253,259",
+                        "startColumns": "4,4",
+                        "startOffsets": "16254,16592",
+                        "endLines": "258,264",
+                        "endColumns": "12,12",
+                        "endOffsets": "16587,16959"
+                    }
+                },
+                {
                     "source": "C:\\Users\\SLNR\\.gradle\\caches\\8.13\\transforms\\96407d0914243064ad3222f4750016c5\\transformed\\customview-poolingcontainer-1.0.0\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2,3",
@@ -822,23 +839,6 @@
                         "startOffsets": "12791",
                         "endColumns": "57",
                         "endOffsets": "12844"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\SLNR\\Downloads\\NagomiMobile-Kotlin\\NagomiNative - 18\\app\\src\\main\\res\\values\\strings.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "55",
-                        "endColumns": "43",
-                        "endOffsets": "94"
-                    },
-                    "to": {
-                        "startLines": "118",
-                        "startColumns": "4",
-                        "startOffsets": "7293",
-                        "endColumns": "43",
-                        "endOffsets": "7332"
                     }
                 }
             ]

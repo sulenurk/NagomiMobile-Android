@@ -1,6 +1,8 @@
 package com.sklabs.nagomi.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -62,6 +64,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
     var longBreakAfter by rememberSaveable { mutableStateOf(settings.regularLongBreakAfter.toString()) }
     var focusCount by rememberSaveable { mutableStateOf(settings.regularFocusCount.toString()) }
     var showResetDialog by rememberSaveable { mutableStateOf(false) }
+    var showPrivacyPolicy by rememberSaveable { mutableStateOf(false) }
     val strings = LocalNagomiStrings.current
 
     LaunchedEffect(settings.dailyFocusGoalMinutes) {
@@ -258,6 +261,24 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
         }
 
         item {
+            SettingsCard(strings.text("privacy_policy", "Privacy Policy")) {
+                Text(
+                    strings.text(
+                        "privacy_policy_summary",
+                        "Learn how Nagomi Mobile handles your data and device permissions.",
+                    ),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                OutlinedButton(
+                    onClick = { showPrivacyPolicy = true },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(strings.text("read_privacy_policy", "Read Privacy Policy"))
+                }
+            }
+        }
+
+        item {
             OutlinedButton(
                 onClick = { showResetDialog = true },
                 modifier = Modifier.fillMaxWidth(),
@@ -267,6 +288,23 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
         }
 
         item { Spacer(Modifier.height(24.dp)) }
+    }
+
+    if (showPrivacyPolicy) {
+        AlertDialog(
+            onDismissRequest = { showPrivacyPolicy = false },
+            title = { Text(strings.text("privacy_policy", "Privacy Policy")) },
+            text = {
+                Column(Modifier.verticalScroll(rememberScrollState())) {
+                    Text(strings.text("privacy_policy_text", DEFAULT_PRIVACY_POLICY))
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showPrivacyPolicy = false }) {
+                    Text(strings.text("close", "Close"))
+                }
+            },
+        )
     }
 
     if (showResetDialog) {
@@ -288,6 +326,18 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
         )
     }
 }
+
+private const val DEFAULT_PRIVACY_POLICY = """Effective date: September 3, 2026
+
+Nagomi Mobile stores your timer settings, subjects, tasks, study plans and session statistics locally on your device.
+
+SKLabs does not collect, transmit, sell or share your personal data. The app does not require an internet connection and does not include advertising, analytics or tracking services.
+
+Notification and exact-alarm permissions are used only to display timer countdowns and play alarms at the requested time.
+
+Your data remains on your device until you remove it from the app or uninstall the app. Uninstalling the app may permanently delete locally stored data.
+
+For privacy questions, contact SKLabs through the support address shown on the application's distribution page."""
 
 @Composable
 private fun SettingsCard(title: String, content: @Composable () -> Unit) {

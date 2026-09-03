@@ -45,11 +45,11 @@ com.sklabs.nagomi.app-lifecycle-runtime-compose-release-43 C:\Users\SLNR\.gradle
 com.sklabs.nagomi.app-ui-release-44 C:\Users\SLNR\.gradle\caches\8.13\transforms\f59a32f27d12bc12bbc80aa5ab41a3ed\transformed\ui-release\res
 com.sklabs.nagomi.app-profileinstaller-1.4.0-45 C:\Users\SLNR\.gradle\caches\8.13\transforms\f5c79ce5a9f611c67c7a2cb21e5b1074\transformed\profileinstaller-1.4.0\res
 com.sklabs.nagomi.app-lifecycle-runtime-release-46 C:\Users\SLNR\.gradle\caches\8.13\transforms\fe9bfa19f6cf76e13e0b15f24a1f8eda\transformed\lifecycle-runtime-release\res
-com.sklabs.nagomi.app-pngs-47 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 18\app\build\generated\res\pngs\debug
-com.sklabs.nagomi.app-resValues-48 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 18\app\build\generated\res\resValues\debug
-com.sklabs.nagomi.app-updated_navigation_xml-49 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 18\app\build\generated\updated_navigation_xml\debug
-com.sklabs.nagomi.app-packageDebugResources-50 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 18\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
-com.sklabs.nagomi.app-packageDebugResources-51 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 18\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
-com.sklabs.nagomi.app-debug-52 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 18\app\build\intermediates\merged_res\debug\mergeDebugResources
-com.sklabs.nagomi.app-debug-53 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 18\app\src\debug\res
-com.sklabs.nagomi.app-main-54 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 18\app\src\main\res
+com.sklabs.nagomi.app-pngs-47 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 20\app\build\generated\res\pngs\debug
+com.sklabs.nagomi.app-resValues-48 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 20\app\build\generated\res\resValues\debug
+com.sklabs.nagomi.app-updated_navigation_xml-49 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 20\app\build\generated\updated_navigation_xml\debug
+com.sklabs.nagomi.app-packageDebugResources-50 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 20\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.sklabs.nagomi.app-packageDebugResources-51 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 20\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.sklabs.nagomi.app-debug-52 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 20\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.sklabs.nagomi.app-debug-53 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 20\app\src\debug\res
+com.sklabs.nagomi.app-main-54 C:\Users\SLNR\Downloads\NagomiMobile-Kotlin\NagomiNative - 20\app\src\main\res

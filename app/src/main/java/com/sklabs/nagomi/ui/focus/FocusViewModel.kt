@@ -59,6 +59,7 @@ class FocusViewModel(application: Application) : AndroidViewModel(application) {
 
     private var ticker: Job? = null
     private var restored = false
+    private var phaseTransitionInProgress = false
     private var appSettings = AppSettings()
 
     init {
@@ -73,7 +74,11 @@ class FocusViewModel(application: Application) : AndroidViewModel(application) {
                     if (!restored) {
                         restored = true
                         restoreTimer(active)
-                    } else if (active != null && _uiState.value.timerTaskId != active.task.id) {
+                    } else if (
+                        !phaseTransitionInProgress &&
+                        active != null &&
+                        _uiState.value.timerTaskId != active.task.id
+                    ) {
                         createFocusTimer(active, "Ready to focus")
                     }
                 }
@@ -323,56 +328,62 @@ class FocusViewModel(application: Application) : AndroidViewModel(application) {
         } else {
             0
         }
-        val result = repository.completeActiveFocus(
-            taskId = taskId,
-            durationSeconds = elapsed,
-            awaySeconds = awayAtCompletion,
-            startedAtMillis = state.focusStartedAtMillis,
-        )
+        phaseTransitionInProgress = true
+        try {
+            val result = repository.completeActiveFocus(
+                taskId = taskId,
+                durationSeconds = elapsed,
+                awaySeconds = awayAtCompletion,
+                startedAtMillis = state.focusStartedAtMillis,
+            )
 
-        if (result.planCompleted || result.nextTaskId == null) {
-            repository.clearFocusTimerState()
-            _uiState.update {
-                it.copy(
-                    currentTask = null,
-                    queue = emptyList(),
-                    timerTaskId = null,
-                    remainingSeconds = 0,
-                    totalSeconds = 0,
-                    isRunning = false,
-                    endTimestampMillis = null,
-                    backgroundStartedAtMillis = null,
-                    planCompleted = true,
-                    status = "Study plan completed",
-                )
+            if (result.planCompleted || result.nextTaskId == null) {
+                repository.clearFocusTimerState()
+                _uiState.update {
+                    it.copy(
+                        currentTask = null,
+                        queue = emptyList(),
+                        timerTaskId = null,
+                        remainingSeconds = 0,
+                        totalSeconds = 0,
+                        isRunning = false,
+                        endTimestampMillis = null,
+                        backgroundStartedAtMillis = null,
+                        planCompleted = true,
+                        status = "Study plan completed",
+                    )
+                }
+                return
             }
-            return
-        }
 
-        if (result.breakMinutes > 0) {
-            val total = result.breakMinutes * 60
-            _uiState.update {
-                it.copy(
-                    phase = FocusPhase.BREAK,
-                    timerTaskId = result.nextTaskId,
-                    remainingSeconds = total,
-                    totalSeconds = total,
-                    isRunning = false,
-                    endTimestampMillis = null,
-                    focusStartedAtMillis = null,
-                    awaySeconds = 0,
-                    backgroundStartedAtMillis = null,
-                    status = "Break before the next task",
-                )
-            }
-            persistTimer()
-            if (automatic && appSettings.autoStartBreak) startTimer()
-        } else {
-            val next = _uiState.value.queue.firstOrNull { it.task.id == result.nextTaskId }
-            if (next != null) {
+            val next = state.queue.firstOrNull { it.task.id == result.nextTaskId }
+                ?: _uiState.value.queue.firstOrNull { it.task.id == result.nextTaskId }
+
+            if (result.breakMinutes > 0) {
+                val total = result.breakMinutes * 60
+                _uiState.update {
+                    it.copy(
+                        currentTask = next ?: it.currentTask,
+                        phase = FocusPhase.BREAK,
+                        timerTaskId = result.nextTaskId,
+                        remainingSeconds = total,
+                        totalSeconds = total,
+                        isRunning = false,
+                        endTimestampMillis = null,
+                        focusStartedAtMillis = null,
+                        awaySeconds = 0,
+                        backgroundStartedAtMillis = null,
+                        status = "Break before the next task",
+                    )
+                }
+                persistTimer()
+                if (automatic && appSettings.autoStartBreak) startTimer()
+            } else if (next != null) {
                 createFocusTimer(next, "Ready for ${next.task.title}")
                 if (automatic && appSettings.autoStartFocus) startTimer()
             }
+        } finally {
+            phaseTransitionInProgress = false
         }
     }
 

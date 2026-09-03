@@ -237,7 +237,7 @@ private fun NagomiBrandSplash() {
             modifier = Modifier.size(logoSize),
         )
         Text(
-            text = "SKLabs™",
+            text = "SKLabs®",
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .navigationBarsPadding()
